@@ -23,7 +23,8 @@ export class CfSuggestProperties {
       return true;
     } else {
       return false;
-    }  }
+    }
+  }
 
 
   public getCompletions(): Array<vscode.CompletionItem> {

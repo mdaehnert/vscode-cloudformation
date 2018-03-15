@@ -9,7 +9,7 @@ export class CfSuggestResources {
   private data: any;
 
   public constructor(schema: any, data: any) {
-    this.schema = schema;
+    this.schema = schema.ResourceTypes;
     this.data = data;
   }
 
