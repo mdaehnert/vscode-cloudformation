@@ -1,5 +1,8 @@
 'use strict';
 
+import { CfSuggestProperties } from './cfSuggestProperties';
+import { CfSuggestResources } from './cfSuggestResources';
+
 import vscode = require('vscode');
 import yaml = require('js-yaml');
 import fs = require('fs');
@@ -13,8 +16,8 @@ export class CfCompletionItemProvider implements vscode.CompletionItemProvider {
     return new Promise((resolve, reject) => {
       let schema  = this.getJsonSchema();
       let data    = this.getYamlUntilCursor(document, curPosition);
-      // console.log(schema);
-      // console.log(data);
+      console.log(schema);
+      console.log(data);
 
       let completions = this.getCompletions(schema, data);
 
@@ -28,6 +31,15 @@ export class CfCompletionItemProvider implements vscode.CompletionItemProvider {
     if (data instanceof yaml.YAMLException) {
       completions.push(this.getYamlErrorCompletion(data));
       return completions;
+    }
+
+    let suggestProp = new CfSuggestProperties(schema, data);
+    let suggestRes  = new CfSuggestResources(schema, data);
+
+    if (suggestProp.isUsable()) {
+      return suggestProp.getCompletions();
+    } else if (suggestRes.isUsable()) {
+      return suggestRes.getCompletions();
     }
 
     completions.push(new vscode.CompletionItem("text1"));
